@@ -16,6 +16,5 @@
     <Compile Include="$(MSBuildThisFileDirectory)Tests\ITest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Tests\ITestCase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Tests\Test.cs" />
-	<Compile Include="$(MSBuildThisFileDirectory)SharedTestCases\ValidateAcknowledgment.cs" />
   </ItemGroup>
 </Project>

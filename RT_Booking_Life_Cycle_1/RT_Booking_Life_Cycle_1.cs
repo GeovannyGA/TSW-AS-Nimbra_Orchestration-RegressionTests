@@ -62,8 +62,6 @@ namespace RT_Booking_Life_Cycle_1
 
 	using Skyline.DataMiner.Automation;
 
-	using Library.;
-
 	/// <summary>
 	/// Represents a DataMiner Automation script.
 	/// </summary>
@@ -84,7 +82,7 @@ namespace RT_Booking_Life_Cycle_1
 				var endTime = startTime.AddMinutes(5);
 
 				// Create parameters for the test case
-				var parameters = new AcknowledgmentParameters
+				var parameters = new ValidateAcknowledgment.AcknowledgmentParameters
 				{
 					Start = startTime,
 					End = endTime,
