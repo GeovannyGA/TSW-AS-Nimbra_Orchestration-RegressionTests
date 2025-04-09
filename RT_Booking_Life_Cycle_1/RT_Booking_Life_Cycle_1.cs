@@ -78,6 +78,7 @@ namespace RT_Booking_Life_Cycle_1
 		{
 			try
 			{
+				engine.Log("Start Test");
 				var startTime = DateTime.Now.AddMinutes(5);
 				var endTime = startTime.AddMinutes(5);
 
@@ -99,8 +100,10 @@ namespace RT_Booking_Life_Cycle_1
 				myTest.AddTestCase(
 					new ValidateAcknowledgment(parameters));
 
+				engine.Log("Execute Test");
 				myTest.Execute(engine);
 				myTest.PublishResults(engine);
+				engine.Log("Finish Test");
 			}
 			catch (Exception e)
 			{
