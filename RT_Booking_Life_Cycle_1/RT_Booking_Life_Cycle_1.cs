@@ -52,13 +52,16 @@ DATE		VERSION		AUTHOR			COMMENTS
 namespace RT_Booking_Life_Cycle_1
 {
 	using System;
-	using System.Collections.Generic;
-	using System.Globalization;
-	using System.Text;
+	using System.Threading;
 
+	using Library.SharedTestCases;
 	using Library.Tests;
 
 	using RT_Validate_Acknowledgment;
+
+	using RT_Validate_Booking;
+
+	using RT_Validate_WorkOrder;
 
 	using Skyline.DataMiner.Automation;
 
@@ -67,7 +70,7 @@ namespace RT_Booking_Life_Cycle_1
 	/// </summary>
 	public class Script
 	{
-		private const string TestName = "RT_Booking_Life_Cycle";
+		private const string TestName = "RT_Booking_Life_Cycle_Validate";
 		private const string TestDescription = "Regression Test to validate the basic life cycle of a ScheduAll Work Order Booking";
 
 		/// <summary>
@@ -78,32 +81,37 @@ namespace RT_Booking_Life_Cycle_1
 		{
 			try
 			{
-				engine.Log("Start Test");
-				var startTime = DateTime.Now.AddMinutes(5);
+				// 4 hours added to match the timestamps of scheduall
+				var startTime = DateTime.Now.AddHours(4).AddMinutes(5);
 				var endTime = startTime.AddMinutes(5);
+				Random random = new Random();
+
+				string randomCircuitId = random.Next(1000000, 10000000).ToString();
+				string randomWorkOrderId = random.Next(1000000, 10000000).ToString();
 
 				// Create parameters for the test case
-				var parameters = new ValidateAcknowledgment.AcknowledgmentParameters
+				var parameters = new AcknowledgmentParameters
 				{
 					Start = startTime,
 					End = endTime,
-					JobName = "RT Test Booking",
+					JobName = "RT Test Booking Life Cycle",
 					Source = "Tata-SRT-IP-1",
 					Destination = "Tata-SRT-OP-1",
 					SourceGroup = "Tata",
 					DestinationGroup = "Tata",
 					Platform = "Test",
 					Endpoint = "http://172.16.100.5:8200",
+					WorkOrder = randomWorkOrderId,
+					ChainId = randomCircuitId,
 				};
 
-				Test myTest = new Test(TestName, TestDescription);
-				myTest.AddTestCase(
-					new ValidateAcknowledgment(parameters));
+				Test test = new Test(TestName, TestDescription);
+				test.AddTestCase(new ValidateAcknowledgment(parameters));
+				test.AddTestCase(new ValidateWorkOrder(parameters));
+				test.AddTestCase(new ValidateBooking(parameters));
 
-				engine.Log("Execute Test");
-				myTest.Execute(engine);
-				myTest.PublishResults(engine);
-				engine.Log("Finish Test");
+				test.Execute(engine);
+				test.PublishResults(engine);
 			}
 			catch (Exception e)
 			{

@@ -8,6 +8,7 @@
 	using System.Threading.Tasks;
 	using System.Xml;
 
+	using Library.SharedTestCases;
 	using Library.Tests.TestCases;
 
 	using QAPortalAPI.Models.ReportingModels;
@@ -34,14 +35,10 @@
 			XmlElement root = doc.CreateElement("InteropSetup");
 			doc.AppendChild(root);
 
-			Random random = new Random();
-			string randomCircuitId = random.Next(1000000, 10000000).ToString();
-			string randomWorkOrderId = random.Next(1000000, 10000000).ToString();
-
 			AddElement(doc, root, "MessageType", "New");
-			AddElement(doc, root, "CircuitID", randomCircuitId);
+			AddElement(doc, root, "CircuitID", parameters.ChainId);
 			AddElement(doc, root, "SharedID", "18922861");
-			AddElement(doc, root, "WorkOrder", randomWorkOrderId);
+			AddElement(doc, root, "WorkOrder", parameters.WorkOrder);
 			AddElement(doc, root, "Client", "CL_ID 10000003");
 			AddElement(doc, root, "JobName", parameters.JobName);
 			AddElement(doc, root, "Start", parameters.Start.ToString("yyyy/MM/dd HH:mm:ss"));
@@ -205,27 +202,6 @@
 				// XML parsing failed
 				return false;
 			}
-		}
-
-		public class AcknowledgmentParameters
-		{
-			public DateTime Start { get; set; }
-
-			public DateTime End { get; set; }
-
-			public string JobName { get; set; }
-
-			public string Source { get; set; }
-
-			public string Destination { get; set; }
-
-			public string SourceGroup { get; set; }
-
-			public string DestinationGroup { get; set; }
-
-			public string Platform { get; set; }
-
-			public string Endpoint { get; set; } = "http://172.16.100.5:8200";
 		}
 	}
 }
