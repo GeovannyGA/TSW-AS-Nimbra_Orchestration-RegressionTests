@@ -2,12 +2,7 @@
 {
 	using System;
 	using System.Collections.Generic;
-	using System.IO;
-	using System.Net.Http;
-	using System.Text;
 	using System.Threading;
-	using System.Threading.Tasks;
-	using System.Xml;
 
 	using Library.SharedTestCases;
 	using Library.Tests.TestCases;
@@ -28,6 +23,7 @@
 		private const int IndexSourceGroup = 12;
 		private const int IndexDestinationGroup = 13;
 		private const int IndexStatus = 18;
+
 		private readonly AcknowledgmentParameters _parameters;
 
 		public ValidateWorkOrder(AcknowledgmentParameters parameters)
@@ -99,7 +95,7 @@
 				return false;
 			}
 
-			string key = GetRow(table, keys, engine);
+			string key = GetRow(table, keys);
 
 			if (String.IsNullOrEmpty(key))
 			{
@@ -108,7 +104,7 @@
 
 			object[] row = table.GetRow(key);
 
-			if (!Convert.ToString(row[IndexSource]).Equals(_parameters.Source) && !Convert.ToString(row[IndexDestination]).Equals(_parameters.Destination))
+			if (!Convert.ToString(row[IndexSource]).Equals(_parameters.Source) || !Convert.ToString(row[IndexDestination]).Equals(_parameters.Destination))
 			{
 				return false;
 			}
@@ -118,7 +114,7 @@
 				return false;
 			}
 
-			if (!Convert.ToString(row[IndexSourceGroup]).Equals(_parameters.SourceGroup) && !Convert.ToString(row[IndexDestinationGroup]).Equals(_parameters.DestinationGroup))
+			if (!Convert.ToString(row[IndexSourceGroup]).Equals(_parameters.SourceGroup) || !Convert.ToString(row[IndexDestinationGroup]).Equals(_parameters.DestinationGroup))
 			{
 				return false;
 			}
@@ -136,7 +132,8 @@
 				return false;
 			}
 
-			waitTime = (waitTime + 5) * 1000; // Buffer time + 5 seconds in ms
+			// Buffer time + 5 seconds in ms
+			waitTime = (waitTime + 5) * 1000;
 
 			Thread.Sleep(waitTime);
 			object[] rowUpdate = table.GetRow(key);
@@ -149,7 +146,7 @@
 			return false;
 		}
 
-		private string GetRow(IDmsTable table, string[] keys, IEngine engine)
+		private string GetRow(IDmsTable table, string[] keys)
 		{
 			var chainIdColumn = table.GetColumn<string>(ChainPid);
 			var workOrderIdColumn = table.GetColumn<string>(WorkOrderPid);

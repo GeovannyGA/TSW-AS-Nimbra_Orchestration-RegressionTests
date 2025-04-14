@@ -1,14 +1,8 @@
 ﻿namespace RT_Validate_Booking
 {
 	using System;
-	using System.Collections.Generic;
 	using System.IO;
 	using System.Linq;
-	using System.Net.Http;
-	using System.Text;
-	using System.Threading;
-	using System.Threading.Tasks;
-	using System.Xml;
 
 	using Library.SharedTestCases;
 	using Library.Tests.TestCases;
@@ -16,19 +10,11 @@
 	using QAPortalAPI.Models.ReportingModels;
 
 	using Skyline.DataMiner.Automation;
-	using Skyline.DataMiner.Core.DataMinerSystem.Automation;
-	using Skyline.DataMiner.Core.DataMinerSystem.Common;
 	using Skyline.DataMiner.Library.Reservation;
 	using Skyline.DataMiner.Library.Resource;
 	using Skyline.DataMiner.Library.Solutions.SRM;
-	using Skyline.DataMiner.Library.Solutions.SRM.Model;
-	using Skyline.DataMiner.Library.Solutions.SRM.Model.ReservationAction;
-	using Skyline.DataMiner.Net;
 	using Skyline.DataMiner.Net.Apps.DataMinerObjectModel;
 	using Skyline.DataMiner.Net.Jobs;
-	using Skyline.DataMiner.Net.LogHelpers;
-	using Skyline.DataMiner.Net.ManagerStore;
-	using Skyline.DataMiner.Net.Messages;
 	using Skyline.DataMiner.Net.Messages.SLDataGateway;
 	using Skyline.DataMiner.Net.ResourceManager.Objects;
 	using Skyline.DataMiner.Net.Sections;
@@ -58,7 +44,7 @@
 		{
 			try
 			{
-				bool isSuccess = IsValidBooking(engine);
+				bool isSuccess = IsValidBooking();
 
 				if (isSuccess)
 				{
@@ -89,7 +75,7 @@
 			}
 
 			char[] invalidChars = Path.GetInvalidFileNameChars();
-			bookingname = String.Join(string.Empty, bookingname.Select(c => invalidChars.Contains(c) ? ' ' : c));
+			bookingname = String.Join(String.Empty, bookingname.Select(c => invalidChars.Contains(c) ? ' ' : c));
 			return bookingname;
 		}
 
@@ -102,7 +88,7 @@
 			return reservation;
 		}
 
-		private bool IsValidBooking(IEngine engine)
+		private bool IsValidBooking()
 		{
 			var reservation = GetCurrentReservation(_parameters.ChainId, _parameters.WorkOrder, _parameters.JobName);
 			if (reservation == null)
@@ -117,15 +103,13 @@
 			var inputGroup = currentReservation.GetPropertyByName(InputGroup);
 			var outputgroup = currentReservation.GetPropertyByName(OutputGroup);
 
-			if (!Convert.ToString(inputname).Equals(_parameters.Source) && !Convert.ToString(outputname).Equals(_parameters.Destination))
+			if (!Convert.ToString(inputname).Equals(_parameters.Source) || !Convert.ToString(outputname).Equals(_parameters.Destination))
 			{
-				engine.Log($"prop dont match 1");
 				return false;
 			}
 
-			if (!Convert.ToString(inputGroup).Equals(_parameters.SourceGroup) && !Convert.ToString(outputgroup).Equals(_parameters.DestinationGroup))
+			if (!Convert.ToString(inputGroup).Equals(_parameters.SourceGroup) || !Convert.ToString(outputgroup).Equals(_parameters.DestinationGroup))
 			{
-				engine.Log($"prop dont match 2");
 				return false;
 			}
 

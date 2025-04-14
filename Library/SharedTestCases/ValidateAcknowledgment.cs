@@ -1,9 +1,8 @@
 ﻿namespace RT_Validate_Acknowledgment
 {
 	using System;
-	using System.Collections.Generic;
-	using System.IO;
 	using System.Net.Http;
+	using System.Runtime.InteropServices;
 	using System.Text;
 	using System.Threading.Tasks;
 	using System.Xml;
@@ -28,7 +27,6 @@
 
 			XmlDocument doc = new XmlDocument();
 
-			// Add XML declaration
 			XmlDeclaration xmlDeclaration = doc.CreateXmlDeclaration("1.0", "UTF-8", null);
 			doc.AppendChild(xmlDeclaration);
 
@@ -52,7 +50,6 @@
 			AddElement(doc, root, "DestinationGroup", parameters.DestinationGroup);
 			AddElement(doc, root, "TimeStamp", DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"));
 
-			// Create the XML string in the exact format needed without XML declaration
 			StringBuilder sb = new StringBuilder();
 			using (XmlWriter writer = XmlWriter.Create(sb, new XmlWriterSettings
 			{
@@ -77,17 +74,10 @@
 		{
 			try
 			{
-				// Log the XML being sent for debugging purposes
-				engine.GenerateInformation($"Sending XML to {_endpoint}:");
-				engine.GenerateInformation(_xmlRequest);
-
 				var (isSuccess, responseBody, errorMessage) = SendXmlRequestAsync(_xmlRequest, _endpoint).GetAwaiter().GetResult();
 
 				if (isSuccess)
 				{
-					engine.GenerateInformation("Received response:");
-					engine.GenerateInformation(responseBody);
-
 					bool isValidResponse = ValidateResponseXml(responseBody);
 
 					if (isValidResponse)
@@ -123,27 +113,21 @@
 			{
 				try
 				{
-					// Create content with "xmlCmd=" prefix followed by XML
 					string content = "xmlCmd=" + xml;
 					var stringContent = new StringContent(content, Encoding.UTF8, "text/plain");
 
 					client.DefaultRequestHeaders.Clear();
 
-					// Set additional headers to match Postman
 					client.DefaultRequestHeaders.Add("User-Agent", "PostmanRuntime/7.43.0");
 					client.DefaultRequestHeaders.Add("Accept", "*/*");
 
-					// Set request timeout if needed
 					client.Timeout = TimeSpan.FromSeconds(30);
 
-					// Send the request
 					HttpResponseMessage response = await client.PostAsync(endpoint, stringContent).ConfigureAwait(false);
 
-					// Read the response
 					string responseBody = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 					int statusCode = (int)response.StatusCode;
 
-					// Check if successful (200 OK)
 					bool isSuccess = response.IsSuccessStatusCode && statusCode == 200;
 
 					return (isSuccess, responseBody, isSuccess ? null : $"Response status code: {statusCode}");
@@ -159,11 +143,9 @@
 		{
 			try
 			{
-				// Parse the XML
 				XmlDocument doc = new XmlDocument();
 				doc.LoadXml(xml);
 
-				// Validate structure - check if it matches expected response format
 				XmlNode interopSetup = doc.SelectSingleNode("/InteropSetup");
 				if (interopSetup == null)
 				{
@@ -183,23 +165,21 @@
 				}
 
 				XmlNode messageType = response.SelectSingleNode("MessageType");
-				if (messageType == null || messageType.InnerText != "New")
+				if (messageType == null || !messageType.InnerText.Equals("New"))
 				{
 					return false;
 				}
 
 				XmlNode statusCode = response.SelectSingleNode("StatusCode");
-				if (statusCode == null || statusCode.InnerText != "200")
+				if (statusCode == null || !statusCode.InnerText.Equals("200"))
 				{
 					return false;
 				}
 
-				// All validations passed
 				return true;
 			}
 			catch (Exception)
 			{
-				// XML parsing failed
 				return false;
 			}
 		}

@@ -81,7 +81,7 @@ namespace RT_Booking_Life_Cycle_1
 		{
 			try
 			{
-				// 4 hours added to match the timestamps of scheduall
+				// 4 hours added to match the timestamps of scheduAll
 				var startTime = DateTime.Now.AddHours(4).AddMinutes(5);
 				var endTime = startTime.AddMinutes(5);
 				Random random = new Random();
