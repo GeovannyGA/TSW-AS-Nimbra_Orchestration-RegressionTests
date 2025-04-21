@@ -23,7 +23,11 @@
 		private const int IndexSourceGroup = 12;
 		private const int IndexDestinationGroup = 13;
 		private const int IndexStatus = 18;
-
+		private const int TableId = 1000;
+		private const int UpdateSend = 7;
+		private const int Created = 1;
+		private const int BufferWaitTime = 106;
+		private const int ExceptionValue = -1;
 		private readonly AcknowledgmentParameters _parameters;
 
 		public ValidateWorkOrder(AcknowledgmentParameters parameters)
@@ -87,7 +91,7 @@
 				return false;
 			}
 
-			var table = scheduAll.GetTable(1000);
+			var table = scheduAll.GetTable(TableId);
 			string[] keys = table.GetPrimaryKeys();
 
 			if (keys.Length == 0)
@@ -119,15 +123,15 @@
 				return false;
 			}
 
-			if (Convert.ToInt32(row[IndexStatus]) == 7)
+			if (Convert.ToInt32(row[IndexStatus]) == UpdateSend)
 			{
 				return true;
 			}
 
-			var waitTimeParam = scheduAll.GetStandaloneParameter<int?>(106);
-			int waitTime = waitTimeParam.GetValue() ?? -1;
+			var waitTimeParam = scheduAll.GetStandaloneParameter<int?>(BufferWaitTime);
+			int waitTime = waitTimeParam.GetValue() ?? ExceptionValue;
 
-			if (waitTime == -1)
+			if (waitTime == ExceptionValue)
 			{
 				return false;
 			}
@@ -138,7 +142,7 @@
 			Thread.Sleep(waitTime);
 			object[] rowUpdate = table.GetRow(key);
 
-			if (Convert.ToInt32(rowUpdate[IndexStatus]) == 7 || Convert.ToInt32(rowUpdate[IndexStatus]) == 1)
+			if (Convert.ToInt32(rowUpdate[IndexStatus]) == UpdateSend || Convert.ToInt32(rowUpdate[IndexStatus]) == Created)
 			{
 				return true;
 			}
