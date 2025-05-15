@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <DMSScript options="272" xmlns="http://www.skyline.be/automation">
-	<Name>RT_Customer_MyFirstRegressionTest</Name>
-	<Description>Example Regression Test to validate something.</Description>
+	<Name>RT_Booking_Life_Cycle</Name>
+	<Description>Booking Life Cycle Regression Test</Description>
 	<Type>Automation</Type>
-	<Author>SKYLINE2\JarnoLE</Author>
+	<Author>SKYLINE2\DanielaPR</Author>
 	<CheckSets>FALSE</CheckSets>
 	<Folder>Regression Testing</Folder>
 
@@ -18,7 +18,7 @@
 
 	<Script>
 		<Exe id="1" type="csharp">
-			<Value><![CDATA[[Project:RT_Customer_MyFirstRegressionTest_1]]]></Value>
+			<Value><![CDATA[[Project:RT_Booking_Life_Cycle_1]]]></Value>
 			<!--<Param type="debug">true</Param>-->
 			<Message></Message>
 		</Exe>
