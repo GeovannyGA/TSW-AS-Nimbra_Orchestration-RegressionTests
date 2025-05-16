@@ -8,12 +8,11 @@
 	using Library.Tests.TestCases;
 
 	using QAPortalAPI.Models.ReportingModels;
+    using Skyline.DataMiner.Automation;
+    using Skyline.DataMiner.Core.DataMinerSystem.Automation;
+    using Skyline.DataMiner.Core.DataMinerSystem.Common;
 
-	using Skyline.DataMiner.Automation;
-	using Skyline.DataMiner.Core.DataMinerSystem.Automation;
-	using Skyline.DataMiner.Core.DataMinerSystem.Common;
-
-	public class ValidateWorkOrder : ITestCase
+    public class ValidateWorkOrder : ITestCase
 	{
 		private const int ChainPid = 1003;
 		private const int WorkOrderPid = 1002;
