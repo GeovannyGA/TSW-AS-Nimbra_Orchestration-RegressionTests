@@ -55,10 +55,16 @@
 				new TestInfo(name, TestInfoConsts.Contact, TestInfoConsts.ProjectIds, description),
 				new TestSystemInfo(GetAgentWhereScriptIsRunning(engine)));
 
-			foreach (var testCase in testCases)
+
+            engine.GenerateInformation($"Outside");
+
+
+            foreach (var testCase in testCases)
 			{
-				try
-				{
+				engine.GenerateInformation($"Testcase name: {testCase.Name}");
+
+                try
+                {
 					testCase.Execute(engine);
 					if (testCase.TestCaseReport != null && !this.report.TryAddTestCase(testCase.TestCaseReport, out string errorMessage))
 					{

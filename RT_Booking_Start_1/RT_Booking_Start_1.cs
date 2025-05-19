@@ -67,7 +67,7 @@ namespace RT_Booking_Start_1
 	public class Script
 	{
 		private const string TestName = "RT_Booking_Start";
-		private const string TestDescription = "Regression Test to validate the start of the booking.";
+		private const string TestDescription = "Regression Test to validate the connection start and end of a booking.";
 
 
 		/// <summary>
@@ -78,13 +78,8 @@ namespace RT_Booking_Start_1
 		{
 			try
 			{
-				engine.GenerateInformation("@@@@@@@@ 1111111111111 TOP");
-
 				Test test = new Test(TestName, TestDescription);
-				test.AddTestCase(new ValidateStart(new WorkOrder()));
-
-				engine.GenerateInformation("@@@@@@@@ Before execute.");
-
+				test.AddTestCase(new ValidateStart());
 				test.Execute(engine);
 				test.PublishResults(engine);
 			}
