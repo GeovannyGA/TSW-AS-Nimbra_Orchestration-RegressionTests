@@ -56,6 +56,7 @@ namespace RT_Booking_Start_1
 	using System.Globalization;
 	using System.Text;
 	using Library.Tests;
+	using RT_Booking_Start_1.Shared;
 	using Skyline.DataMiner.Automation;
 	using Skyline.DataMiner.Net.ReportsAndDashboards;
 	using static System.Net.Mime.MediaTypeNames;
@@ -65,8 +66,8 @@ namespace RT_Booking_Start_1
 	/// </summary>
 	public class Script
 	{
-		private const string TestName = "RT_B";
-		private const string TestDescription = "Regression Test to validate the basic life cycle of a ScheduAll Work Order Booking";
+		private const string TestName = "RT_Booking_Start";
+		private const string TestDescription = "Regression Test to validate the start of the booking.";
 
 
 		/// <summary>
@@ -77,45 +78,20 @@ namespace RT_Booking_Start_1
 		{
 			try
 			{
-				RunSafe(engine);
-			}
-			catch (ScriptAbortException)
-			{
-				// Catch normal abort exceptions (engine.ExitFail or engine.ExitSuccess)
-				throw; // Comment if it should be treated as a normal exit of the script.
-			}
-			catch (ScriptForceAbortException)
-			{
-				// Catch forced abort exceptions, caused via external maintenance messages.
-				throw;
-			}
-			catch (ScriptTimeoutException)
-			{
-				// Catch timeout exceptions for when a script has been running for too long.
-				throw;
-			}
-			catch (InteractiveUserDetachedException)
-			{
-				// Catch a user detaching from the interactive script by closing the window.
-				// Only applicable for interactive scripts, can be removed for non-interactive scripts.
-				throw;
+				engine.GenerateInformation("@@@@@@@@ 1111111111111 TOP");
+
+				Test test = new Test(TestName, TestDescription);
+				test.AddTestCase(new ValidateStart(new WorkOrder()));
+
+				engine.GenerateInformation("@@@@@@@@ Before execute.");
+
+				test.Execute(engine);
+				test.PublishResults(engine);
 			}
 			catch (Exception e)
 			{
 				engine.ExitFail("Run|Something went wrong: " + e);
 			}
-		}
-
-		private void RunSafe(IEngine engine)
-		{
-
-			//Test test = new Test(TestName, TestDescription);
-			//test.AddTestCase(new ValidateAcknowledgment(parameters));
-			//test.AddTestCase(new ValidateWorkOrder(parameters));
-			//test.AddTestCase(new ValidateBooking(parameters));
-
-			//test.Execute(engine);
-			//test.PublishResults(engine);
 		}
 	}
 }

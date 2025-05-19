@@ -51,6 +51,8 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RT_Booking_Start_1.cs" />
+    <Compile Include="Shared\ValidateStart.cs" />
+    <Compile Include="Shared\WorkOrder.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Skyline.DataMiner.Core.DataMinerSystem.Automation">
