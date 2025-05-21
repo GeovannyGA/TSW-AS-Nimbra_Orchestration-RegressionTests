@@ -1,12 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RT_Booking_Start_1.Shared
+﻿namespace RT_Booking_Start_1.Shared
 {
+	using System;
+	using System.Globalization;
+	using System.Linq;
+	using System.Text;
+
+	public enum WorkOrderInteropStatus
+	{
+		Confirmed = 1,
+		Pending = 2,
+	}
+
+	public enum WorkOrderStatus
+	{
+		Na = -1,
+		Created = 1,
+		Failed = 2,
+		Complete = 3,
+		Canceled = 4,
+		InProgress = 5,
+		PendingUpdate = 6,
+		UpdateSent = 7,
+	}
+
 	public class WorkOrder
 	{
 		public string InstanceId { get; set; }
@@ -149,27 +165,9 @@ namespace RT_Booking_Start_1.Shared
 			};
 		}
 
-		private string GetRandomId(int length)
+		private static string GetRandomId(int length)
 		{
 			return string.Join("", Math.Abs(Guid.NewGuid().GetHashCode()).ToString().Take(length));
-		}
-
-		public enum WorkOrderInteropStatus
-		{
-			Confirmed = 1,
-			Pending = 2,
-		}
-
-		public enum WorkOrderStatus
-		{
-			Na = -1,
-			Created = 1,
-			Failed = 2,
-			Complete = 3,
-			Canceled = 4,
-			InProgress = 5,
-			PendingUpdate = 6,
-			UpdateSent = 7,
 		}
 	}
 }

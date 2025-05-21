@@ -7,7 +7,6 @@
 	using QAPortalAPI.Models.ReportingModels;
 	using Skyline.DataMiner.Automation;
 	using Skyline.DataMiner.Core.DataMinerSystem.Common;
-	using static RT_Booking_Start_1.Shared.WorkOrder;
 
 	public class ValidateStart : ITestCase
 	{

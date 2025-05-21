@@ -52,14 +52,9 @@ DATE		VERSION		AUTHOR			COMMENTS
 namespace RT_Booking_Start_1
 {
 	using System;
-	using System.Collections.Generic;
-	using System.Globalization;
-	using System.Text;
 	using Library.Tests;
 	using RT_Booking_Start_1.Shared;
 	using Skyline.DataMiner.Automation;
-	using Skyline.DataMiner.Net.ReportsAndDashboards;
-	using static System.Net.Mime.MediaTypeNames;
 
 	/// <summary>
 	/// Represents a DataMiner Automation script.
