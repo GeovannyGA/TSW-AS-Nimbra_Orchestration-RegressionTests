@@ -62,7 +62,7 @@ namespace RT_Booking_Start_1
 	public class Script
 	{
 		private const string TestName = "RT_Booking_Start";
-		private const string TestDescription = "Regression Test to validate the connection start and end of a booking.";
+		private const string TestDescription = "Regression Test to validate the connection and start of a booking.";
 
 
 		/// <summary>
