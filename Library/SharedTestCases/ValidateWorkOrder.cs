@@ -65,21 +65,6 @@
             }
         }
 
-        private static IDmsElement GetScheduAllElement(IDms dms)
-        {
-            ICollection<IDmsElement> elements = dms.GetElements();
-
-            foreach (IDmsElement element in elements)
-            {
-                if (element.Protocol.Name.Equals("ScheduAll Generic Interop Manager") && element.Protocol.Version.Equals("Production", StringComparison.OrdinalIgnoreCase))
-                {
-                    return element;
-                }
-            }
-
-            return null;
-        }
-
         private bool IsValidWorkOrder(IEngine engine)
         {
             RTestIdmsHelper rtestIdmsHelper = new RTestIdmsHelper(engine);
