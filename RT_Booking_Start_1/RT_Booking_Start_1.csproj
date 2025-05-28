@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{B23A0E24-7C96-4016-916D-D06024F2E4B4}</ProjectGuid>
+    <ProjectGuid>{A14EB11C-20C9-49F9-9132-0BBB6DF75532}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>RT_Booking_Life_Cycle_1</RootNamespace>
-    <AssemblyName>RT_Booking_Life_Cycle_1</AssemblyName>
+    <RootNamespace>RT_Booking_Start_1</RootNamespace>
+    <AssemblyName>RT_Booking_Start_1</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <LangVersion>
@@ -24,7 +24,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>..\Internal\Code Analysis\qaction-debug.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>bin\Debug\RT_Booking_Life_Cycle_1.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\RT_Booking_Start_1.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -34,7 +34,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>..\Internal\Code Analysis\qaction-release.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>bin\Release\RT_Booking_Life_Cycle_1.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\RT_Booking_Start_1.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
@@ -46,20 +46,20 @@
     <Reference Include="System" />
     <AdditionalFiles Include="stylecop.json" />
     <Content Include=".editorconfig" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RT_Booking_Life_Cycle_1.cs" />
+    <Compile Include="RT_Booking_Start_1.cs" />
+    <Compile Include="Shared\ValidateStart.cs" />
+    <Compile Include="Shared\WorkOrder.cs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json">
-      <Version>13.0.3</Version>
-    </PackageReference>
     <PackageReference Include="Skyline.DataMiner.Core.DataMinerSystem.Automation">
-      <Version>1.1.2.2</Version>
+      <Version>1.1.3.1</Version>
     </PackageReference>
     <PackageReference Include="Skyline.DataMiner.Core.DataMinerSystem.Common">
-      <Version>1.1.2.2</Version>
+      <Version>1.1.3.1</Version>
     </PackageReference>
     <PackageReference Include="Skyline.DataMiner.Dev.Automation">
       <Version>10.2.0.11</Version>
@@ -78,12 +78,11 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="..\Library\Library.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties DisLinkId="1" DisProjectType="automationScriptProject" DisLinkedXmlFile="..\RT_Booking_Life_Cycle.xml" />
+      <UserProperties DisLinkedXmlFile="..\RT_Booking_Start.xml" DisProjectType="automationScriptProject" DisLinkId="1" />
     </VisualStudio>
   </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
