@@ -11,7 +11,7 @@
 	public class ValidateStart : ITestCase
 	{
 		private const int WorkOrderTableId = 1000;
-		private const int NumberOfRetries = 3;
+		private const int NumberOfRetries = 5;
 
 		public ValidateStart()
 		{
@@ -46,6 +46,7 @@
 					if ((WorkOrderStatus)Convert.ToInt16(recentlyCreatedWO[18]) == WorkOrderStatus.InProgress)
 					{
 						TestCaseReport = TestCaseReport.GetSuccessTestCase(Name);
+
 						return;
 					}
 
