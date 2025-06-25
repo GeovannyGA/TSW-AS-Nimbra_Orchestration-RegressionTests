@@ -1,16 +1,13 @@
 ﻿namespace RT_Validate_WorkOrder
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading;
     using Library.HelperMethods;
     using Library.SharedTestCases;
     using Library.Tests.TestCases;
-
     using QAPortalAPI.Models.ReportingModels;
     using Skyline.DataMiner.Automation;
-    using Skyline.DataMiner.Core.DataMinerSystem.Automation;
     using Skyline.DataMiner.Core.DataMinerSystem.Common;
+    using System;
+    using System.Threading;
 
     public class ValidateWorkOrder : ITestCase
     {
