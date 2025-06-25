@@ -34,5 +34,30 @@
                 return null;
             }
         }
+
+        public static string GetRowWithChainIdAndWorkOrderId(IDmsTable table, string bookingChainId, string bookingWordOrder)
+        {
+            string[] keys = table.GetPrimaryKeys();
+
+            if (keys.Length == 0)
+            {
+                return String.Empty;
+            }
+
+            var chainIdColumn = table.GetColumn<string>(Constants.ChainPid);
+            var workOrderIdColumn = table.GetColumn<string>(Constants.WorkOrderPid);
+
+            for (int i = 0; i < keys.Length; i++)
+            {
+                string chainId = chainIdColumn.GetValue(keys[i], KeyType.PrimaryKey);
+                string workOrderId = workOrderIdColumn.GetValue(keys[i], KeyType.PrimaryKey);
+                if (chainId.Equals(bookingChainId) && workOrderId.Equals(bookingWordOrder))
+                {
+                    return keys[i];
+                }
+            }
+
+            return String.Empty;
+        }
     }
 }

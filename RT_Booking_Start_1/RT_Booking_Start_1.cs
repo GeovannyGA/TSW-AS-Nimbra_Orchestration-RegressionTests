@@ -54,7 +54,7 @@ namespace RT_Booking_Start_1
 	using System;
 	using Library.SharedTestCases;
 	using Library.Tests;
-	using RT_Booking_Start_1.Shared;
+	using RT_Booking_Start;
 	using RT_Validate_Acknowledgment;
 	using RT_Validate_WorkOrder;
 	using Skyline.DataMiner.Automation;

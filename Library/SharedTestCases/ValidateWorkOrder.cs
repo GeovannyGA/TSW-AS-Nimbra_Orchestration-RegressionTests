@@ -11,19 +11,6 @@
 
     public class ValidateWorkOrder : ITestCase
     {
-        private const int ChainPid = 1003;
-        private const int WorkOrderPid = 1002;
-        private const int IndexSource = 6;
-        private const int IndexDestination = 7;
-        private const int IndexJobName = 8;
-        private const int IndexSourceGroup = 12;
-        private const int IndexDestinationGroup = 13;
-        private const int IndexStatus = 18;
-        private const int TableId = 1000;
-        private const int UpdateSend = 7;
-        private const int Created = 1;
-        private const int BufferWaitTime = 106;
-        private const int ExceptionValue = -1;
         private readonly AcknowledgmentParameters _parameters;
 
         public ValidateWorkOrder(AcknowledgmentParameters parameters)
@@ -72,7 +59,7 @@
                 return false;
             }
 
-            var table = scheduAll.GetTable(TableId);
+            var table = scheduAll.GetTable(Constants.TableId);
             string[] keys = table.GetPrimaryKeys();
 
             if (keys.Length == 0)
@@ -89,30 +76,30 @@
 
             object[] row = table.GetRow(key);
 
-            if (!Convert.ToString(row[IndexSource]).Equals(_parameters.Source) || !Convert.ToString(row[IndexDestination]).Equals(_parameters.Destination))
+            if (!Convert.ToString(row[Constants.IndexSource]).Equals(_parameters.Source) || !Convert.ToString(row[Constants.IndexDestination]).Equals(_parameters.Destination))
             {
                 return false;
             }
 
-            if (!Convert.ToString(row[IndexJobName]).Equals(_parameters.JobName))
+            if (!Convert.ToString(row[Constants.IndexJobName]).Equals(_parameters.JobName))
             {
                 return false;
             }
 
-            if (!Convert.ToString(row[IndexSourceGroup]).Equals(_parameters.SourceGroup) || !Convert.ToString(row[IndexDestinationGroup]).Equals(_parameters.DestinationGroup))
+            if (!Convert.ToString(row[Constants.IndexSourceGroup]).Equals(_parameters.SourceGroup) || !Convert.ToString(row[Constants.IndexDestinationGroup]).Equals(_parameters.DestinationGroup))
             {
                 return false;
             }
 
-            if (Convert.ToInt32(row[IndexStatus]) == UpdateSend)
+            if ((WorkOrderStatus)Convert.ToInt16(row[Constants.IndexStatus]) == WorkOrderStatus.UpdateSent)
             {
                 return true;
             }
 
-            var waitTimeParam = scheduAll.GetStandaloneParameter<int?>(BufferWaitTime);
-            int waitTime = waitTimeParam.GetValue() ?? ExceptionValue;
+            var waitTimeParam = scheduAll.GetStandaloneParameter<int?>(Constants.BufferWaitTime);
+            int waitTime = waitTimeParam.GetValue() ?? Constants.ExceptionValue;
 
-            if (waitTime == ExceptionValue)
+            if (waitTime == Constants.ExceptionValue)
             {
                 return false;
             }
@@ -123,7 +110,7 @@
             Thread.Sleep(waitTime);
             object[] rowUpdate = table.GetRow(key);
 
-            if (Convert.ToInt32(rowUpdate[IndexStatus]) == UpdateSend || Convert.ToInt32(rowUpdate[IndexStatus]) == Created)
+            if ((WorkOrderStatus)Convert.ToInt16(rowUpdate[Constants.IndexStatus]) == WorkOrderStatus.UpdateSent || (WorkOrderStatus)Convert.ToInt16(rowUpdate[Constants.IndexStatus]) == WorkOrderStatus.Created)
             {
                 return true;
             }
@@ -133,8 +120,8 @@
 
         private string GetRow(IDmsTable table, string[] keys)
         {
-            var chainIdColumn = table.GetColumn<string>(ChainPid);
-            var workOrderIdColumn = table.GetColumn<string>(WorkOrderPid);
+            var chainIdColumn = table.GetColumn<string>(Constants.ChainPid);
+            var workOrderIdColumn = table.GetColumn<string>(Constants.WorkOrderPid);
 
             for (int i = 0; i < keys.Length; i++)
             {

@@ -52,9 +52,11 @@ dd/mm/2025	1.0.0.1		XXX, Skyline	Initial version
 namespace RT_Booking_End_1
 {
 	using System;
-	using System.Collections.Generic;
-	using System.Globalization;
-	using System.Text;
+	using Library.SharedTestCases;
+	using Library.Tests;
+	using RT_Booking_Start;
+	using RT_Validate_Acknowledgment;
+	using RT_Validate_WorkOrder;
 	using Skyline.DataMiner.Automation;
 
 	/// <summary>
@@ -62,6 +64,9 @@ namespace RT_Booking_End_1
 	/// </summary>
 	public class Script
 	{
+		private const string TestName = "RT_Booking_Start";
+		private const string TestDescription = "Regression Test to validate the connection and start of a booking.";
+
 		/// <summary>
 		/// The script entry point.
 		/// </summary>
@@ -70,38 +75,42 @@ namespace RT_Booking_End_1
 		{
 			try
 			{
-				RunSafe(engine);
-			}
-			catch (ScriptAbortException)
-			{
-				// Catch normal abort exceptions (engine.ExitFail or engine.ExitSuccess)
-				throw; // Comment if it should be treated as a normal exit of the script.
-			}
-			catch (ScriptForceAbortException)
-			{
-				// Catch forced abort exceptions, caused via external maintenance messages.
-				throw;
-			}
-			catch (ScriptTimeoutException)
-			{
-				// Catch timeout exceptions for when a script has been running for too long.
-				throw;
-			}
-			catch (InteractiveUserDetachedException)
-			{
-				// Catch a user detaching from the interactive script by closing the window.
-				// Only applicable for interactive scripts, can be removed for non-interactive scripts.
-				throw;
+				// 4 hours added to match the timestamps of scheduAll
+				var startTime = DateTime.Now.AddHours(4).AddSeconds(30);
+				var endTime = startTime.AddMinutes(5);
+				Random random = new Random();
+
+				string randomCircuitId = random.Next(1000000, 10000000).ToString();
+				string randomWorkOrderId = random.Next(1000000, 10000000).ToString();
+
+				// Create parameters for the test case
+				var parameters = new AcknowledgmentParameters
+				{
+					Start = startTime,
+					End = endTime,
+					JobName = "RT Test Booking Start",
+					Source = "Tata-SRT-IP-1",
+					Destination = "Tata-SRT-OP-1",
+					SourceGroup = "Tata",
+					DestinationGroup = "Tata",
+					Platform = "Test",
+					Endpoint = "http://172.16.100.5:8200",
+					WorkOrder = randomWorkOrderId,
+					ChainId = randomCircuitId,
+				};
+
+				Test test = new Test(TestName, TestDescription);
+				test.AddTestCase(new ValidateAcknowledgment(parameters));
+				test.AddTestCase(new ValidateWorkOrder(parameters));
+				test.AddTestCase(new ValidateStart(parameters));
+
+				test.Execute(engine);
+				test.PublishResults(engine);
 			}
 			catch (Exception e)
 			{
-				engine.ExitFail("Run|Something went wrong: " + e);
+				engine.Log($"{TestName} failed: {e}");
 			}
-		}
-
-		private void RunSafe(IEngine engine)
-		{
-			// TODO: Define code here
 		}
 	}
 }

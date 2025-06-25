@@ -47,9 +47,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RT_Booking_Start_1", "RT_Booking_Start_1\RT_Booking_Start_1.csproj", "{A14EB11C-20C9-49F9-9132-0BBB6DF75532}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RT_Booking_End", "RT_Booking_End", "{338A61A0-668D-448C-B849-52643086CF0A}"
-	ProjectSection(SolutionItems) = preProject
-		RT_Booking_End.xml = RT_Booking_End.xml
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Actions", "Actions", "{59C0703A-9BDB-4D2B-BCB0-F10BCF652CDC}"
 EndProject
@@ -95,6 +92,7 @@ Global
 	EndGlobalSection
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Library\Library.projitems*{0d197ff4-225f-41a0-b0c2-02e031c066dd}*SharedItemsImports = 13
+		Library\Library.projitems*{69da543e-0a43-4484-8967-3e5543114b2a}*SharedItemsImports = 4
 		Library\Library.projitems*{a14eb11c-20c9-49f9-9132-0bbb6df75532}*SharedItemsImports = 4
 		Library\Library.projitems*{b23a0e24-7c96-4016-916d-d06024f2e4b4}*SharedItemsImports = 4
 	EndGlobalSection
