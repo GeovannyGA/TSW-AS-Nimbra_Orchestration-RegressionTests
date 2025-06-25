@@ -56,7 +56,7 @@
 				throw new InvalidOperationException("ScheduAllElement was null or not found");
 			}
 
-			var table = rtestIdmsHelper.ScheduAllElement.GetTable(Constants.TableId);
+			var table = rtestIdmsHelper.ScheduAllElement.GetTable(ConstantVariables.TableId);
 			string key = RTestIdmsHelper.GetRowWithChainIdAndWorkOrderId(table, _parameters.ChainId, _parameters.WorkOrder);
 
 			if (String.IsNullOrEmpty(key))
@@ -66,7 +66,7 @@
 
 			object[] row = table.GetRow(key);
 
-			if ((WorkOrderStatus)Convert.ToInt16(row[Constants.IndexStatus]) == WorkOrderStatus.InProgress)
+			if ((WorkOrderStatus)Convert.ToInt16(row[ConstantVariables.IndexStatus]) == WorkOrderStatus.InProgress)
 			{
 				return true;
 			}

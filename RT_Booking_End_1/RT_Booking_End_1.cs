@@ -54,6 +54,7 @@ namespace RT_Booking_End_1
 	using System;
 	using Library.SharedTestCases;
 	using Library.Tests;
+	using RT_Booking_End;
 	using RT_Booking_Start;
 	using RT_Validate_Acknowledgment;
 	using RT_Validate_WorkOrder;
@@ -64,8 +65,8 @@ namespace RT_Booking_End_1
 	/// </summary>
 	public class Script
 	{
-		private const string TestName = "RT_Booking_Start";
-		private const string TestDescription = "Regression Test to validate the connection and start of a booking.";
+		private const string TestName = "RT_Booking_End";
+		private const string TestDescription = "Regression Test to validate the end of a booking.";
 
 		/// <summary>
 		/// The script entry point.
@@ -103,6 +104,7 @@ namespace RT_Booking_End_1
 				test.AddTestCase(new ValidateAcknowledgment(parameters));
 				test.AddTestCase(new ValidateWorkOrder(parameters));
 				test.AddTestCase(new ValidateStart(parameters));
+				test.AddTestCase(new ValidateEnd(parameters));
 
 				test.Execute(engine);
 				test.PublishResults(engine);

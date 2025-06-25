@@ -44,8 +44,8 @@
                 return String.Empty;
             }
 
-            var chainIdColumn = table.GetColumn<string>(Constants.ChainPid);
-            var workOrderIdColumn = table.GetColumn<string>(Constants.WorkOrderPid);
+            var chainIdColumn = table.GetColumn<string>(ConstantVariables.ChainPid);
+            var workOrderIdColumn = table.GetColumn<string>(ConstantVariables.WorkOrderPid);
 
             for (int i = 0; i < keys.Length; i++)
             {

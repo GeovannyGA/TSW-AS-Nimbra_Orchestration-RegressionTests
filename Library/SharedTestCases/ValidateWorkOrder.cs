@@ -59,7 +59,7 @@
                 return false;
             }
 
-            var table = scheduAll.GetTable(Constants.TableId);
+            var table = scheduAll.GetTable(ConstantVariables.TableId);
             string[] keys = table.GetPrimaryKeys();
 
             if (keys.Length == 0)
@@ -76,30 +76,30 @@
 
             object[] row = table.GetRow(key);
 
-            if (!Convert.ToString(row[Constants.IndexSource]).Equals(_parameters.Source) || !Convert.ToString(row[Constants.IndexDestination]).Equals(_parameters.Destination))
+            if (!Convert.ToString(row[ConstantVariables.IndexSource]).Equals(_parameters.Source) || !Convert.ToString(row[ConstantVariables.IndexDestination]).Equals(_parameters.Destination))
             {
                 return false;
             }
 
-            if (!Convert.ToString(row[Constants.IndexJobName]).Equals(_parameters.JobName))
+            if (!Convert.ToString(row[ConstantVariables.IndexJobName]).Equals(_parameters.JobName))
             {
                 return false;
             }
 
-            if (!Convert.ToString(row[Constants.IndexSourceGroup]).Equals(_parameters.SourceGroup) || !Convert.ToString(row[Constants.IndexDestinationGroup]).Equals(_parameters.DestinationGroup))
+            if (!Convert.ToString(row[ConstantVariables.IndexSourceGroup]).Equals(_parameters.SourceGroup) || !Convert.ToString(row[ConstantVariables.IndexDestinationGroup]).Equals(_parameters.DestinationGroup))
             {
                 return false;
             }
 
-            if ((WorkOrderStatus)Convert.ToInt16(row[Constants.IndexStatus]) == WorkOrderStatus.UpdateSent)
+            if ((WorkOrderStatus)Convert.ToInt16(row[ConstantVariables.IndexStatus]) == WorkOrderStatus.UpdateSent)
             {
                 return true;
             }
 
-            var waitTimeParam = scheduAll.GetStandaloneParameter<int?>(Constants.BufferWaitTime);
-            int waitTime = waitTimeParam.GetValue() ?? Constants.ExceptionValue;
+            var waitTimeParam = scheduAll.GetStandaloneParameter<int?>(ConstantVariables.BufferWaitTime);
+            int waitTime = waitTimeParam.GetValue() ?? ConstantVariables.ExceptionValue;
 
-            if (waitTime == Constants.ExceptionValue)
+            if (waitTime == ConstantVariables.ExceptionValue)
             {
                 return false;
             }
@@ -110,7 +110,7 @@
             Thread.Sleep(waitTime);
             object[] rowUpdate = table.GetRow(key);
 
-            if ((WorkOrderStatus)Convert.ToInt16(rowUpdate[Constants.IndexStatus]) == WorkOrderStatus.UpdateSent || (WorkOrderStatus)Convert.ToInt16(rowUpdate[Constants.IndexStatus]) == WorkOrderStatus.Created)
+            if ((WorkOrderStatus)Convert.ToInt16(rowUpdate[ConstantVariables.IndexStatus]) == WorkOrderStatus.UpdateSent || (WorkOrderStatus)Convert.ToInt16(rowUpdate[ConstantVariables.IndexStatus]) == WorkOrderStatus.Created)
             {
                 return true;
             }
@@ -120,8 +120,8 @@
 
         private string GetRow(IDmsTable table, string[] keys)
         {
-            var chainIdColumn = table.GetColumn<string>(Constants.ChainPid);
-            var workOrderIdColumn = table.GetColumn<string>(Constants.WorkOrderPid);
+            var chainIdColumn = table.GetColumn<string>(ConstantVariables.ChainPid);
+            var workOrderIdColumn = table.GetColumn<string>(ConstantVariables.WorkOrderPid);
 
             for (int i = 0; i < keys.Length; i++)
             {
