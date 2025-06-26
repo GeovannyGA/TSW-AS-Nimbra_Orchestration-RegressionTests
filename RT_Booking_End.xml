@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <DMSScript options="272" xmlns="http://www.skyline.be/automation">
 	<Name>RT_Booking_End</Name>
-	<Description>Booking end regression test. Checks all the steps after a booking ends.</Description>
+	<Description>Booking end regression test. Checks that the booking ends with all steps.</Description>
 	<Type>Automation</Type>
 	<Author>SKYLINE2\GeovannyGA</Author>
 	<CheckSets>FALSE</CheckSets>

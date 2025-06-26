@@ -1,77 +1,83 @@
 ﻿namespace RT_Booking_Start
 {
-	using System;
-	using System.Threading;
-	using Library.HelperMethods;
-	using Library.SharedTestCases;
-	using Library.Tests.TestCases;
-	using QAPortalAPI.Models.ReportingModels;
-	using Skyline.DataMiner.Automation;
+    using System;
+    using System.Threading;
+    using Library.HelperMethods;
+    using Library.SharedTestCases;
+    using Library.Tests.TestCases;
+    using QAPortalAPI.Models.ReportingModels;
+    using Skyline.DataMiner.Automation;
 
-	public class ValidateStart : ITestCase
-	{
-		private readonly AcknowledgmentParameters _parameters;
+    public class ValidateStart : ITestCase
+    {
+        private const int _numberOfRetries = 3;
+        private readonly AcknowledgmentParameters _parameters;
 
-		public ValidateStart(AcknowledgmentParameters parameters)
-		{
-			_parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
-			Name = $"Validate Booking Start: Connection between source and destination in Nimbra Edge element. Along with the booking status changing to in progress.";
-		}
+        public ValidateStart(AcknowledgmentParameters parameters)
+        {
+            _parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
+            Name = $"Validate Booking Start: Connection between source and destination in Nimbra Edge element. Along with the booking status changing to in progress.";
+        }
 
-		public string Name { get; set; }
+        public string Name { get; set; }
 
-		public TestCaseReport TestCaseReport { get; private set; }
+        public TestCaseReport TestCaseReport { get; private set; }
 
-		public PerformanceTestCaseReport PerformanceTestCaseReport { get;}
+        public PerformanceTestCaseReport PerformanceTestCaseReport { get; }
 
-		public void Execute(IEngine engine)
-		{
-			try
-			{
-				// wait the buffer time for the row to be added
-				Thread.Sleep(60000);
-				bool isSuccess = IsBookingStatusSetToInProgress(engine);
+        public void Execute(IEngine engine)
+        {
+            try
+            {
+                // wait the buffer time for the row to be added
+                Thread.Sleep(60000);
 
-				if (isSuccess)
-				{
-					TestCaseReport = TestCaseReport.GetSuccessTestCase(Name);
-				}
-				else
-				{
-					TestCaseReport = TestCaseReport.GetFailTestCase(Name, "The booking was not set to in progress within the time defined.");
-				}
-			}
-			catch (Exception ex)
-			{
-				TestCaseReport = TestCaseReport.GetFailTestCase(Name, $"Exception occurred: {ex.Message}");
-			}
-		}
+                bool isSuccess = false;
 
-		private bool IsBookingStatusSetToInProgress(IEngine engine)
-		{
-			RTestIdmsHelper rtestIdmsHelper = new RTestIdmsHelper(engine);
+                for (int i = 1; i <= _numberOfRetries; i++)
+                {
+                    isSuccess = IsBookingStatusSetToInProgress(engine);
+                    if (isSuccess)
+                    {
+                        break;
+                    }
 
-			if (rtestIdmsHelper.ScheduAllElement == null)
-			{
-				throw new InvalidOperationException("ScheduAllElement was null or not found");
-			}
+                    Thread.Sleep(5000);
+                }
 
-			var table = rtestIdmsHelper.ScheduAllElement.GetTable(ConstantVariables.TableId);
-			string key = RTestIdmsHelper.GetRowWithChainIdAndWorkOrderId(table, _parameters.ChainId, _parameters.WorkOrder);
+                TestCaseReport = isSuccess ? TestCaseReport.GetSuccessTestCase(Name) : TestCaseReport.GetFailTestCase(Name, "The booking was not set to in progress within the time defined.");
+            }
+            catch (Exception ex)
+            {
+                TestCaseReport = TestCaseReport.GetFailTestCase(Name, $"Exception occurred: {ex.Message}");
+            }
+        }
 
-			if (String.IsNullOrEmpty(key))
-			{
-				return false;
-			}
+        private bool IsBookingStatusSetToInProgress(IEngine engine)
+        {
+            RTestIdmsHelper rtestIdmsHelper = new RTestIdmsHelper(engine);
 
-			object[] row = table.GetRow(key);
+            if (rtestIdmsHelper.ScheduAllElement == null)
+            {
+                throw new InvalidOperationException("ScheduAllElement was null or not found");
+            }
 
-			if ((WorkOrderStatus)Convert.ToInt16(row[ConstantVariables.IndexStatus]) == WorkOrderStatus.InProgress)
-			{
-				return true;
-			}
+            var table = rtestIdmsHelper.ScheduAllElement.GetTable(ConstantVariables.TableId);
+            string key = RTestIdmsHelper.GetRowWithChainIdAndWorkOrderId(table, _parameters.ChainId, _parameters.WorkOrder);
 
-			return false;
-		}
-	}
+            if (String.IsNullOrEmpty(key))
+            {
+                return false;
+            }
+
+            object[] row = table.GetRow(key);
+
+            if ((WorkOrderStatus)Convert.ToInt16(row[ConstantVariables.IndexStatus]) == WorkOrderStatus.InProgress)
+            {
+                return true;
+            }
+
+            return false;
+        }
+    }
 }

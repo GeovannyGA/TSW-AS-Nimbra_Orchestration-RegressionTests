@@ -3,6 +3,7 @@
 	using System;
 	using System.IO;
 	using System.Linq;
+	using System.Threading;
 	using Library.HelperMethods;
 	using Library.SharedTestCases;
 	using Library.Tests.TestCases;
@@ -18,6 +19,7 @@
 
 	public class ValidateEnd : ITestCase
 	{
+		private const int _numberOfRetries = 5;
 		public string Name { get; set; }
 
 		public TestCaseReport TestCaseReport { get; private set; }
@@ -29,20 +31,36 @@
 		public ValidateEnd(AcknowledgmentParameters parameters)
 		{
 			_parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
-			Name = $"Validate Booking Start: Connection between source and destination in Nimbra Edge element. Along with the booking status changing to in progress.";
+			Name = $"Validate Booking End: Disconection between source and destination in Nimbra Edge element.";
 		}
 
 		public void Execute(IEngine engine)
 		{
 			try
 			{
-				if (IsBookingSetToEnd(engine))
+				if (!IsBookingSetToEnd(engine))
 				{
-					TestCaseReport = TestCaseReport.GetSuccessTestCase(Name);
+					TestCaseReport = TestCaseReport.GetFailTestCase(Name, "The time of the booking was not able to change.");
+					return;
 				}
 
-				TestCaseReport = TestCaseReport.GetFailTestCase(Name, "The ending of a booking failed.");
+				Thread.Sleep(40000);
+				bool isSuccess = false;
 
+				for (int i = 1; i <= _numberOfRetries; i++)
+				{
+					isSuccess = IsBookingStatusSetCompleted(engine);
+					if (isSuccess)
+					{
+						break;
+					}
+
+					engine.GenerateInformation($"Check number: {i} to see if status is set to completed");
+					Thread.Sleep(5000);
+				}
+
+				// Then need to check input/output connection and booking status to completed
+				TestCaseReport = isSuccess ? TestCaseReport.GetSuccessTestCase(Name) : TestCaseReport.GetFailTestCase(Name, "The ending of a booking failed.");
 			}
 			catch (Exception ex)
 			{
@@ -66,7 +84,7 @@
 
 			var changeTimeInputData = new ChangeTimeInputData
 			{
-				EndDate = DateTime.Now.AddHours(4).AddSeconds(30),
+				EndDate = DateTime.Now.AddSeconds(30),
 				StartDate = currentReservation.Start.ToLocalTime(),
 				IsSilent = true,
 				PreRoll = new TimeSpan(0, 0, 0),
@@ -97,6 +115,33 @@
 			char[] invalidChars = Path.GetInvalidFileNameChars();
 			bookingname = String.Join(String.Empty, bookingname.Select(c => invalidChars.Contains(c) ? ' ' : c));
 			return bookingname;
+		}
+
+		private bool IsBookingStatusSetCompleted(IEngine engine)
+		{
+			RTestIdmsHelper rtestIdmsHelper = new RTestIdmsHelper(engine);
+
+			if (rtestIdmsHelper.ScheduAllElement == null)
+			{
+				throw new InvalidOperationException("ScheduAllElement was null or not found");
+			}
+
+			var table = rtestIdmsHelper.ScheduAllElement.GetTable(ConstantVariables.TableId);
+			string key = RTestIdmsHelper.GetRowWithChainIdAndWorkOrderId(table, _parameters.ChainId, _parameters.WorkOrder);
+
+			if (String.IsNullOrEmpty(key))
+			{
+				return false;
+			}
+
+			object[] row = table.GetRow(key);
+
+			if ((WorkOrderStatus)Convert.ToInt16(row[ConstantVariables.IndexStatus]) == WorkOrderStatus.Complete)
+			{
+				return true;
+			}
+
+			return false;
 		}
 	}
 }
