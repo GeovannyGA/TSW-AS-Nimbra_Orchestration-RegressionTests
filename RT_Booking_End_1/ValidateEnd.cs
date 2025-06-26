@@ -55,7 +55,6 @@
 						break;
 					}
 
-					engine.GenerateInformation($"Check number: {i} to see if status is set to completed");
 					Thread.Sleep(5000);
 				}
 
