@@ -120,6 +120,7 @@
 
 					client.DefaultRequestHeaders.Add("User-Agent", "PostmanRuntime/7.43.0");
 					client.DefaultRequestHeaders.Add("Accept", "*/*");
+					client.DefaultRequestHeaders.Add("Connection", "close");
 
 					client.Timeout = TimeSpan.FromSeconds(30);
 
